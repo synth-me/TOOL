@@ -22,7 +22,6 @@ function onLoad(evt){
     **/
     
     pretty_print = function (x){
-        // Lamen é superestimado?
         console.log(JSON.stringify(x))
         return JSON.stringify(x); 
     } 
