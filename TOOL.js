@@ -22,7 +22,7 @@ function onLoad(evt){
     **/
     
     pretty_print = function (x){
-        /* vndflkgn */
+        
         console.log(JSON.stringify(x))
         return JSON.stringify(x); 
     } 
