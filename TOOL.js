@@ -1,5 +1,5 @@
 // Last Stable Version: 12/07/2024 
-// Adição de texto - Arthur -> 13:48 
+// Adição de texto - Arthur 
 
 function onLoad(evt){
 
@@ -22,7 +22,6 @@ function onLoad(evt){
     **/
     
     pretty_print = function (x){
-        
         console.log(JSON.stringify(x))
         return JSON.stringify(x); 
     } 
