@@ -1,5 +1,5 @@
 // Last Stable Version: 12/07/2024 
-// Adição de texto - Arthur 
+// Adição de texto - Arthur -> 13:48 
 
 function onLoad(evt){
 
