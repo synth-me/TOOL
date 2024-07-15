@@ -3,6 +3,8 @@
 # Ramen.js 
 `ramen.js` is a toolbox to assist graphical development for EBO software.
 
+current version: `homemade`
+
 ## Objetive:
 All the features included in this library are made to simplify the process of interface design in EBO. 
 I spotted that most of our programmers spent valuable time in repetitive tasks like copying and pasting code 
