@@ -1,5 +1,4 @@
-// Last Stable Version: 13/07/2024 
-
+// Last Stable Version: 15/07/2024 
 
 function onLoad(evt){
 
@@ -22,6 +21,7 @@ function onLoad(evt){
     **/
     
     pretty_print = function (x){
+        /* vndflkgn */
         console.log(JSON.stringify(x))
         return JSON.stringify(x); 
     } 
@@ -49,7 +49,47 @@ function onLoad(evt){
             }
             return items; 
         }
-    }  
+    }
+    
+    /**
+    * Esta função filtra todos os elementos filho de um elemento
+    * alvo e aplica uma função em todos, mas apenas mantém os nós
+    * que retornaram verdadeiro para a função em questão 
+    *
+    * @param {Element} element É o elemento com os filhos
+    * @param {callable} f É a função que será aplicada 
+    * @param {array}: São os nós resultantes após a aplicação da função
+    *
+    **/
+    filterNode = (element,f) => {
+        if(Array.isArray(element)){
+            return element.map(f); 
+        }else{
+             const childBlocks = element.getChildNodes(); 
+             const items = [];
+             for(var i=0;i<childBlocks.getLength(); i++){
+                if(f(childBlocks.item(i))){
+                    items.push(childBlocks.item(i))
+                }
+            }
+            return items; 
+        }
+    }   
+    
+    /**
+   * Essa função filtra utilizando a função regex para todos os elementos filho
+   * do elemento atual. Basta selecionar o atributo que seja uma string como Id ou Name 
+   * e criar o regex para o padrão escolhido  
+   *
+   * @method 
+   * @param {Element} element É o elemento em questão
+   * @param {string} attr É o atributo escolhido 
+   * @param {string} É um regex  
+   * @returns {asrray} Retorna uma array com todos os nós encontrados  
+   **/
+    filterRegex = function(element,attr,regex){
+        return filterNode(element,(x) => regex.test(""+x.getAttribute(attr)) )           
+    }
     
     /**
     * Esta função extende a função mapNode, de modo que cada nó 
@@ -106,7 +146,7 @@ function onLoad(evt){
     * @param {Element} element É o elemento que passará a ter as caracteristicas citadas 
     *
     **/
-    
+ 
     P_ = function(element){
 
        this.element = element; // define o elemento como um atributo da classe 
@@ -372,7 +412,7 @@ function onLoad(evt){
        this.onUp    = (callable) => this.onEventPrimitive(this.UP_EVENT)(this.element,callable);
        this.onDown  = (callable) => this.onEventPrimitive(this.DOWN_EVENT)(this.element,callable);
        this.onMove  = (callable) => this.onEventPrimitive(this.MOVE_EVENT)(this.element,callable);
-       this.onChange  = (callable) => this.onEventPrimitive(this.MOVE_EVENT)(this.element,callable);
+       this.onChange  = (callable) => this.onEventPrimitive(this.CHANGE_EVENT)(this.element,callable);
        
        /* ------------------------------------------ */
        
@@ -389,6 +429,22 @@ function onLoad(evt){
           mapNode(this,(x) => {callable(new P_(x))});
           return this ; 
        }; 
+       
+       /**
+       * Essa função filtra utilizando a função regex para todos os elementos filho
+       * do elemento atual. Basta selecionar o atributo que seja uma string como Id ou Name 
+       * e criar o regex para o padrão escolhido  
+       *
+       * @method 
+       * @param {string} attr É o atributo escolhido 
+       * @param {string} É um regex  
+       * @returns {asrray} Retorna uma array com todos os nós encontrados  
+       **/ 
+       this.filterRegex = function(attr,regex_string){
+          const regex    = new RegExp(regex_string);
+          const filtered = filterNode(this.element,(x) => regex.test(""+x.getAttribute(attr)) );
+          return filtered.map(x => new P_(x));    
+       }
         
         
        /* ------------------------------------------ */
@@ -400,7 +456,7 @@ function onLoad(evt){
    * que sempre o último elemento de uma lista de nós seja o elemento 
    * onOver de modo que não há o problema de ao modificar o tamanho de 
    * um componente com zoom in ele arraste os componentes das laterais junto
-   * exemplo: new layerTopping(event.getCurrentTarget()).apply();
+   *
    * @class 
    * @param {Element} node É o elemento event.getCurrentTarget() que vem quando o script está no componente em questão
    **/
@@ -480,7 +536,7 @@ function onLoad(evt){
             }
             
         }
-
+        
         /**
         * Este método distribui os eventos onOver em todos os nós que são possíveis 
         * e assim, neste caso, automaticamente lida com erros caso o nó não seja 
@@ -492,10 +548,8 @@ function onLoad(evt){
         this.distribute_events = () => {
              this.node
                  .map((element) => {                 
-                    try{
-                        element.onOver(this.onOver)
-                    }catch(e){
-                        console.log(`Could not insert onOver on element of tag: ${element.getTagName()}`)
+                    try{       element.onOver(this.onOver)
+                    }catch(e){ console.log(`Could not insert onOver on element of tag: ${element.getTagName()}`)
                     }
                 })            
         }; 
