@@ -5,7 +5,7 @@
 
 current version: `homemade`
 
-## Objetive:
+## Objectives:
 All the features included in this library are made to simplify the process of interface design in EBO. 
 I spotted that most of our programmers spent valuable time in repetitive tasks like copying and pasting code 
 or even allocating memory for variables that should not exist solely because TGML Script did not have
