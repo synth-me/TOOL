@@ -1,5 +1,7 @@
-# TOOL
-TOOL is a toolbox to assist graphical development for EBO software.
+<img align=center src="https://github.com/user-attachments/assets/32c4f8ae-cbe4-404b-88a3-7fe0c2373f7f" width="200" height="200">
+
+# Ramen.js 
+`ramen.js` is a toolbox to assist graphical development for EBO software.
 
 ## Objetive:
 All the features included in this library are made to simplify the process of interface design in EBO. 
