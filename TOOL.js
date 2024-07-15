@@ -1,5 +1,5 @@
-// Last Stable Version: 12/07/2024 
-// Adição de texto - Arthur 
+// Last Stable Version: 13/07/2024 
+
 
 function onLoad(evt){
 
@@ -400,7 +400,7 @@ function onLoad(evt){
    * que sempre o último elemento de uma lista de nós seja o elemento 
    * onOver de modo que não há o problema de ao modificar o tamanho de 
    * um componente com zoom in ele arraste os componentes das laterais junto
-   *
+   * exemplo: new layerTopping(event.getCurrentTarget()).apply();
    * @class 
    * @param {Element} node É o elemento event.getCurrentTarget() que vem quando o script está no componente em questão
    **/
