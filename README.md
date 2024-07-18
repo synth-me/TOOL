@@ -44,6 +44,14 @@ console.log(element.Fill) // instead of using .getAttribute
 element.map(x => x.setAttribute('Fill',htmlColors.cyan))
 ```
 
+5. Bind Database handle
+
+and much more like: 
+
+* Automatic node reodering
+* Direct bind access just like databases
+* Custom elements and templating 
+
 ------------------------------------------
 
 ## How to build ? 
