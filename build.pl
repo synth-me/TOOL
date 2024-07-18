@@ -45,7 +45,7 @@ sub local_generate_xml {
 		print "Adding ... $files_paths[$index]\n" ; 
 		my $content = read_content $files_paths[$index] ;
 		'<Script Name="'.$files[$index].'" OnDocumentLoad="onLoad"><![CDATA[//BUILD DATETIME'.$datetime.'//'.$content.']]></Script>';
-	} 0..$#files_paths);
+	} reverse 0..$#files_paths);
 
 	print "Building main component ...\n";
 	# build the bigger component with all scripts nodes 
