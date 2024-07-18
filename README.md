@@ -18,4 +18,19 @@ the ergononimcs to avoid it. This libary was designed to solve this kind of prob
 3. Simplfied Attribute Access
 4. JS Modernized Features
 
+------------------------------------------
 
+## How to build ? 
+For a smoother usage of the current scripts inside EBO software I created a `build.pl` file that will handle all generation of
+the TGML nodes that can be copy and pasted inside any project. 
+For linux users:
+```perl
+build
+```
+and for windows users
+```perl
+perl build.pl
+```
+The file will generate a `/build` folder which will contain a TGML file with all content from the `src` scripts. 
+
+------------------------------------------
