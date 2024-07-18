@@ -1,7 +1,7 @@
 <img align=center src="https://github.com/user-attachments/assets/32c4f8ae-cbe4-404b-88a3-7fe0c2373f7f" width="200" height="200">
 
 # Ramen.js 
-`ramen.js` is a toolbox to assist graphical development for EBO software.
+`ramen.js` is a toolbox 🔨 to assist graphical development for EBO software.
 
 current version: `homemade`
 
@@ -27,10 +27,12 @@ For linux users:
 ```perl
 build
 ```
-and for windows users
+and for windows users with perl 
 ```perl
 perl build.pl
 ```
-The file will generate a `/build` folder which will contain a TGML file with all content from the `src` scripts. 
+if you're using the `release` bundle instead of cloning this repo all you need to do is run the build file inside the folder 
+that is already built and it should work as expected as well. The file will generate a `/build` folder which will contain 
+a TGML file with all content from the `src` scripts. 
 
 ------------------------------------------
