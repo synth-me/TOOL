@@ -14,9 +14,35 @@ the ergononimcs to avoid it. This libary was designed to solve this kind of prob
 ## Main Features:
 
 1. Curried Objects
+
+```javascript
+element.setAttribute('Fill',htmlColors.cyan)
+       .setAtrribute('Width',1000)
+       .setAtrribute('Height',1000)
+```
+
 2. Simplfied Attributions of events
+
+```javascript
+const fun = (event) => {
+   console.log('test me!')
+}
+
+element.onClick(fun)
+       .onOver(fun)
+       .onOut(fun)
+```
+
 3. Simplfied Attribute Access
+
+```javascript
+console.log(element.Fill) // instead of using .getAttribute
+```
 4. JS Modernized Features
+
+```javascript
+element.map(x => x.setAttribute('Fill',htmlColors.cyan))
+```
 
 ------------------------------------------
 
