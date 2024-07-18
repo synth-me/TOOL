@@ -25,9 +25,11 @@ sub local_generate_xml {
 	my $folder = "src";
 
 	# getting all the files from the source 
- 	opendir(my $dir, $folder) or die "Could not open directory '$folder': $!";
+	print "Fetching all files ...\n";
+ 	opendir(my $dir, $folder) or die "Could not open directory '$folder': $!\n";
 	my @files = grep { $_ ne '.' && $_ ne '..' } readdir($dir);
 	closedir($dir);
+	print "Fetched total of $#files file(s) \n";
 
 	# getting all the names from the files 
 	my @files_paths = map { File::Spec->catfile($folder, $_) } @files;
@@ -37,26 +39,32 @@ sub local_generate_xml {
 
 	# map over all the file's content and name and then start building 
 	# the scripts  
+	print "Let's add files ... \n" ; 
 	my $script_elements = join('\n', map {
 		my $index = $_;
+		print "Adding ... $files_paths[$index]\n" ; 
 		my $content = read_content $files_paths[$index] ;
 		'<Script Name="'.$files[$index].'" OnDocumentLoad="onLoad"><![CDATA[//BUILD DATETIME'.$datetime.'//'.$content.']]></Script>';
 	} 0..$#files_paths);
 
+	print "Building main component ...\n";
 	# build the bigger component with all scripts nodes 
 	my $content = '<Component Name="ramen-bundle">'.$script_elements.'</Component>';
 
+	print "Creating build folder ...\n";
 	# check if there's a 'build' folder, if not then create it 
-	-d "build" ? print "There's already a build folder, using it ..." : mkdir('build') ; 
+	-d "build" ? print "There's already a build folder, using it ...\n" : mkdir('build') ; 
 
 	# the new file name 
 	my $xml_file = "build/ramen-bundle.tgml";
 
 	# write the file in the build folder 
-	open my $fh, '>', $xml_file or die "Couldn't open file '$xml_file' for writing: $!";
+	open my $fh, '>', $xml_file or die "Couldn't open file '$xml_file' for writing: $! \n";
 	binmode($fh, ':encoding(UTF-8)');
 	print $fh $content;
 	close $fh;
+
+	print "All done !\n";
 	
 }
 
