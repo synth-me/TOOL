@@ -37,9 +37,9 @@ async function onLoad(event){
         this.add = function(bind_path, shortcut, callable){
             this.container[shortcut] = {
                 "fullName": bind_path,
-                "reaction": () => {
+                "reaction": (composer) => {
                     const doc = document.getDocumentElement(); 
-                    return callable(doc);          
+                    return callable(composer,doc);          
                 } 
             };
             return this;
@@ -85,9 +85,15 @@ async function onLoad(event){
             await client.subscribeValues(data => {
                 data.forEach(({value, unit}, key) => {
                     const bind_name = paths.filter(x => x[1] === key)[0][0];
-                    this.container[bind_name].reaction(({value, unit}, key), document.getDocumentElement());
+                    let composer = {
+                        "value":value,
+                        "unit":unit,
+                        "name":key,
+                    }
+                    this.container[bind_name].reaction(composer, document.getDocumentElement());
                 });            
             }, paths.map(x => x[1]));
+            return this ;
         };
         
         /**
@@ -95,7 +101,7 @@ async function onLoad(event){
          *
          * @method
          * @param {string} shortcut - O atalho da associação.
-         * @returns {Promise<*>} - O valor da associação.
+         * @returns {Promise<number>} - O valor da associação.
          */
         this.getValue = async function(shortcut){        
             const bindPath = this.container[shortcut];    
@@ -103,6 +109,18 @@ async function onLoad(event){
             const value_obj = await client.readValues([bindPath.fullName]);        
             return value_obj.get(bindPath.fullName).value;    
         };
+        
+        /**
+         * Atribui o valor de uma associação.
+         *
+         * @method
+         * @param {string} shortcut - O atalho da associação.        
+         * @param {string | number} value - O valor a ser inserido. 
+         */
+         
+         this.setValue = async function(shortcut,value){            
+            await client.setValue(this.container[shortcut].fullName,value);
+         }
         
         /**
          * Imprime as associações em um formato legível.
