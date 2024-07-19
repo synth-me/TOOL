@@ -44,7 +44,7 @@ sub local_generate_xml {
 		my $index = $_;
 		print "Adding ... $files_paths[$index]\n" ; 
 		my $content = read_content $files_paths[$index] ;
-		'<Script Name="'.$files[$index].'" OnDocumentLoad="onLoad"><![CDATA[//BUILD DATETIME'.$datetime.'//'.$content.']]></Script>';
+		'<Script Name="'.$files[$index].'" OnDocumentLoad="onLoad"><![CDATA[//BUILD DATETIME'.$datetime."\n".$content.']]></Script>';
 	} reverse 0..$#files_paths);
 
 	print "Building main component ...\n";
