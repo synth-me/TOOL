@@ -1,5 +1,5 @@
 //BUILD DATETIME19-07-24_14-16-43
-// Last Stable Version: 16/07/2024 
+// Last Stable Version: 26/07/2024 
 
 function onLoad(evt){
 
@@ -163,7 +163,8 @@ function onLoad(evt){
        * @param {P_} main_ É o elemento do objeto atual, que serão modificadas os atributos 
        *
        **/
-       this.update = function (element,main_){       
+       this.update = function (element,main_){
+           
            var l = element.getAttributes() ; 
            var attributes_ = {}; 
            for (var i = 0; i < l.length; i++) {
@@ -171,6 +172,7 @@ function onLoad(evt){
              var attributeValue = l.item(i).value;             
              main_[attributeName] = attributeValue ;
            }
+           
        }
        
        this.update(element,this);
@@ -179,10 +181,28 @@ function onLoad(evt){
            return this.element ;
        }
        
-       this.getChild = function (child_name) {
-           this.update(this.element,this);
-           return new P_(this.element.getChild(child_name))
-       }
+       /**
+         * Recursively gets a nested child element based on a sequence of names separated by '#'.
+         * Example: 'Name1#Name2#Name3' searches for 'Name1' in the current element, 
+         * then 'Name2' in the children of 'Name1', and finally 'Name3' in the children of 'Name2'.
+         * @param {string} child_name - A sequence of child names separated by '#'.
+         * @returns {P_} An instance of P_ wrapping the found child element.
+        */
+        this.getChild = function (child_name) {
+            this.update(this.element, this);
+            
+            const getChildRecursive = (element, names) => {
+                if (names.length === 0) return element;
+                const [currentName, ...restNames] = names;
+                const currentChild = element.getChild(currentName);
+                return getChildRecursive(currentChild, restNames);
+            };
+            
+            const namesArray = child_name.split('#');
+            const foundElement = getChildRecursive(this.element, namesArray);
+            
+            return new P_(foundElement);
+        };
        
        this.getAttribute = function (attribute) {
            this.update(this.element,this);
@@ -201,32 +221,41 @@ function onLoad(evt){
        
        this.getFirstChild = function () {
            this.update(this.element,this);
-           return this.element.firstChild;
+           return new P_(this.element.getFirstChild());;
        };
        
        this.getLastChild = function () {
            this.update(this.element,this);
-           return this.element.getLastChild();
+           return new P_(this.element.getLastChild());
        };
        
        this.getNextSibling = function () {
            this.update(this.element,this);
-           return this.element.getNextSibling();
+           return new P_(this.element.getNextSibling());
        };
        
        this.getOwnerDocument = function () {
            this.update(this.element,this);
-           return this.element.getOwnerDocument();
+           return new P_(this.element.getOwnerDocument());
        };
+       
+        /**
+         * Recursively gets the parent node of a given element in a functional approach.
+         * @param {number} [up_number=1] - The number of levels to go up in the DOM tree.
+         * @returns {Node} The parent node at the specified level.
+         */
+        this.getParentNode = (up_number = 1) => {
+            const getParent = (element, levels) => {
+                return levels > 0 && element ? getParent(element.getParentNode(), levels - 1) : element;
+            };
 
-       this.getParentNode = function () {
-           this.update(this.element,this);
-           return this.element.getParentNode();
-       };
-
+            const parentElement = getParent(this.element, up_number);
+            return parentElement ? new P_(parentElement) : null;
+        };
+       
        this.getPreviousSibling = function () {
            this.update(this.element,this);
-           return this.element.getPreviousSibling();
+           return new P_(this.element.getPreviousSibling());
        };
 
        this.getTagName = function () {
@@ -261,7 +290,7 @@ function onLoad(evt){
 
        this.getElementById = function (id) {
            this.update(this.element,this);
-           return this.element.getElementById(id);
+           return new P_(this.element.getElementById(id));
        };
 
        this.getLength = function () {
@@ -305,7 +334,6 @@ function onLoad(evt){
            this.update(this.element,this);
            return this;
        };
-       
 
        this.setAttribute = function (attribute, value) {
            this.element.setAttribute(attribute, value);
@@ -451,6 +479,8 @@ function onLoad(evt){
        /* ------------------------------------------ */
              
    }
+   
+   docNode = new P_(document.getDocumentElement());
    
    /**
    * Esse objeto simplesmente contém uma camada de abstração para 
