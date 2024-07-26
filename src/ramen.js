@@ -178,10 +178,28 @@ function onLoad(evt){
            return this.element ;
        }
        
-       this.getChild = function (child_name) {
-           this.update(this.element,this);
-           return new P_(this.element.getChild(child_name))
-       }
+       /**
+         * Recursively gets a nested child element based on a sequence of names separated by '#'.
+         * Example: 'Name1#Name2#Name3' searches for 'Name1' in the current element, 
+         * then 'Name2' in the children of 'Name1', and finally 'Name3' in the children of 'Name2'.
+         * @param {string} child_name - A sequence of child names separated by '#'.
+         * @returns {P_} An instance of P_ wrapping the found child element.
+        */
+        this.getChild = function (child_name) {
+            this.update(this.element, this);
+            
+            const getChildRecursive = (element, names) => {
+                if (names.length === 0) return element;
+                const [currentName, ...restNames] = names;
+                const currentChild = element.getChild(currentName);
+                return getChildRecursive(currentChild, restNames);
+            };
+            
+            const namesArray = child_name.split('#');
+            const foundElement = getChildRecursive(this.element, namesArray);
+            
+            return new P_(foundElement);
+        };
        
        this.getAttribute = function (attribute) {
            this.update(this.element,this);
