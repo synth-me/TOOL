@@ -1,30 +1,8 @@
-//BUILD DATETIME26-07-24_11-00-07
+//BUILD DATETIME08-08-24_14-05-10
 //BUILD DATETIME19-07-24_14-16-43
-// Last Stable Version: 26/07/2024 
+// Last Stable Version: 16/07/2024 
 
 function onLoad(evt){
-
-     /**
-     * Filtra os nós filhos de um componente baseado em um atributo específico e seu valor.
-     *
-     * @param {Object} cComp - O componente pai que contém os nós filhos a serem filtrados.
-     * @param {string} attrName - O nome do atributo pelo qual os nós filhos serão filtrados.
-     * @param {string} attrValue - O valor do atributo que o nó filho deve ter para ser incluído no resultado.
-     * @param {string} searchType - Tipo de pesquisa (não utilizado na implementação atual).
-     * @returns {Array|Object|null} - Retorna um array de nós filhos que correspondem ao critério de pesquisa, 
-     * se mais de um nó for encontrado. Se apenas um nó corresponder, retorna esse nó. Se nenhum nó corresponder, retorna `null`.
-     */
-    const nodeFilter = (cComp, attrName, attrValue, searchType) => {
-        const children = Array.from(cComp.getChildNodes());
-
-        const filteredChildren = children.filter(child => 
-            child.hasAttribute(attrName) && child.getAttribute(attrName) === attrValue
-        );
-
-        return filteredChildren.length > 1 ? filteredChildren 
-             : filteredChildren.length === 1 ? filteredChildren[0] 
-             : null;
-    };
 
     /**
     * Está função é um alias para o console.log apenas para uso geral 
@@ -49,6 +27,26 @@ function onLoad(evt){
         console.log(JSON.stringify(x))
         return JSON.stringify(x); 
     } 
+    
+    /**
+     * Filtra os nós filhos de um componente baseado em um atributo específico e seu valor.
+     *
+     * @param {Object} cComp - O componente pai que contém os nós filhos a serem filtrados.
+     * @param {string} attrName - O nome do atributo pelo qual os nós filhos serão filtrados.
+     * @param {string} attrValue - O valor do atributo que o nó filho deve ter para ser incluído no resultado.
+     * @param {string} searchType - Tipo de pesquisa (não utilizado na implementação atual).
+     * @returns {Array|Object|null} - Retorna um array de nós filhos que correspondem ao critério de pesquisa, 
+     * se mais de um nó for encontrado. Se apenas um nó corresponder, retorna esse nó. Se nenhum nó corresponder, retorna `null`.
+     */
+    nodeFilter = function(cComp, attrName, attrValue, searchType){
+        const children = Array.from(cComp.getChildNodes());
+
+        const filteredChildren = children.filter(child => 
+            child.hasAttribute(attrName) && child.getAttribute(attrName) === attrValue
+        );
+
+        return filteredChildren.length > 1 ? filteredChildren : null;
+    };
     
     /**
     * Esta função mapeia todos os elementos filho de um elemento
@@ -186,8 +184,7 @@ function onLoad(evt){
        * @param {P_} main_ É o elemento do objeto atual, que serão modificadas os atributos 
        *
        **/
-       this.update = function (element,main_){
-           
+       this.update = function (element,main_){       
            var l = element.getAttributes() ; 
            var attributes_ = {}; 
            for (var i = 0; i < l.length; i++) {
@@ -195,7 +192,6 @@ function onLoad(evt){
              var attributeValue = l.item(i).value;             
              main_[attributeName] = attributeValue ;
            }
-           
        }
        
        this.update(element,this);
@@ -204,25 +200,25 @@ function onLoad(evt){
            return this.element ;
        }
        
-       /**
+        /**
          * Recursively gets a nested child element based on a sequence of names separated by '#'.
          * Example: 'Name1#Name2#Name3' searches for 'Name1' in the current element, 
          * then 'Name2' in the children of 'Name1', and finally 'Name3' in the children of 'Name2'.
          * @param {string} child_name - A sequence of child names separated by '#'.
          * @returns {P_} An instance of P_ wrapping the found child element.
-        */
+         */
         this.getChild = function (child_name) {
             this.update(this.element, this);
             
-            const getChildRecursive = (element, names) => {
-                if (names.length === 0) return element;
-                const [currentName, ...restNames] = names;
+            const getChildRecursive = function (element, names, index) {
+                if (index >= names.length) return element;
+                const currentName = names[index];
                 const currentChild = element.getChild(currentName);
-                return getChildRecursive(currentChild, restNames);
+                return getChildRecursive(currentChild, names, index + 1);
             };
             
             const namesArray = child_name.split('#');
-            const foundElement = getChildRecursive(this.element, namesArray);
+            const foundElement = getChildRecursive(this.element, namesArray, 0);
             
             return new P_(foundElement);
         };
@@ -244,41 +240,45 @@ function onLoad(evt){
        
        this.getFirstChild = function () {
            this.update(this.element,this);
-           return new P_(this.element.getFirstChild());;
+           return this.element.firstChild;
        };
        
        this.getLastChild = function () {
            this.update(this.element,this);
-           return new P_(this.element.getLastChild());
+           return this.element.getLastChild();
        };
        
        this.getNextSibling = function () {
            this.update(this.element,this);
-           return new P_(this.element.getNextSibling());
+           return this.element.getNextSibling();
        };
        
        this.getOwnerDocument = function () {
            this.update(this.element,this);
-           return new P_(this.element.getOwnerDocument());
+           return this.element.getOwnerDocument();
        };
-       
-        /**
-         * Recursively gets the parent node of a given element in a functional approach.
-         * @param {number} [up_number=1] - The number of levels to go up in the DOM tree.
-         * @returns {Node} The parent node at the specified level.
-         */
-        this.getParentNode = (up_number = 1) => {
-            const getParent = (element, levels) => {
-                return levels > 0 && element ? getParent(element.getParentNode(), levels - 1) : element;
-            };
 
-            const parentElement = getParent(this.element, up_number);
-            return parentElement ? new P_(parentElement) : null;
+       /**
+        * Recursively gets the parent node of a given element in a functional approach.
+        * @param {number} [up_number=1] - The number of levels to go up in the DOM tree.
+        * @returns {Node} The parent node at the specified level.
+       */
+       this.getParentNode = (up_number) => {
+          const getParent = (element, levels) => {
+          return levels > 0 && element ? getParent(element.getParentNode(), levels - 1) : element;
         };
-       
+        
+        if(!up_number){
+          up_number = 1;  
+        };
+    
+        const parentElement = getParent(this.element, up_number);
+        return parentElement ? new P_(parentElement) : null;
+       };
+
        this.getPreviousSibling = function () {
            this.update(this.element,this);
-           return new P_(this.element.getPreviousSibling());
+           return this.element.getPreviousSibling();
        };
 
        this.getTagName = function () {
@@ -313,7 +313,7 @@ function onLoad(evt){
 
        this.getElementById = function (id) {
            this.update(this.element,this);
-           return new P_(this.element.getElementById(id));
+           return this.element.getElementById(id);
        };
 
        this.getLength = function () {
@@ -327,8 +327,6 @@ function onLoad(evt){
        };
        
        /*-------------------------*/
-       
-       
        
        this.appendChild = function (nodeChild) {
            this.element.appendChild(nodeChild);
@@ -359,6 +357,7 @@ function onLoad(evt){
            this.update(this.element,this);
            return this;
        };
+       
 
        this.setAttribute = function (attribute, value) {
            this.element.setAttribute(attribute, value);
@@ -374,11 +373,6 @@ function onLoad(evt){
            this.update(this.element,this);
            return this ; 
        };
-      
-       this.getFullBindName = function(){
-           return this.element.getFullBindName();
-           
-       }
       
       /**
       *
@@ -511,7 +505,11 @@ function onLoad(evt){
    }
    
    docNode = new P_(document.getDocumentElement());
-   docName = _.last(document.getDocumentElement().getOwnerDocument().communicationProxy.viewer.activeDocument.path.split("/")) ;
+   try{
+      docName = _.last(document.getDocumentElement().getOwnerDocument().communicationProxy.viewer.activeDocument.path.split("/")) ;
+   }catch(ex){
+      console.log("you're working with workstation, can't use docName right now")
+   }
 
    getDocName = (node) => {
         return _.last(node.getOwnerDocument().communicationProxy.viewer.navigation.path.split("/"));
