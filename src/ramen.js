@@ -45,7 +45,7 @@ function onLoad(evt){
             child.hasAttribute(attrName) && child.getAttribute(attrName) === attrValue
         );
 
-        return filteredChildren.length > 1 ? filteredChildren : null;
+        return filteredChildren ;
     };
     
     /**
@@ -863,4 +863,6 @@ function onLoad(evt){
     }
 
    
+
+	
 }
