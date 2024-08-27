@@ -774,5 +774,93 @@ function onLoad(evt){
       "lightyellow": "#FFFFE0",
       "ivory": "#FFFFF0"
     }
+
+
+	/**
+	* @fileoverview Script para realizar o replay de um valor específico no passado.
+	* Este script é usado para recuperar e definir valores históricos em um componente baseado em um 'trend'.
+	*/
+
+	/**
+	* Data inicial para o replay dos logs.
+	* @type {Date}
+	*/
+	var zeroDate = new Date('August 10, 2024 18:00:00');
+
+	/**
+	* Armazena o resultado filtrado.
+	* @type {Object|undefined}
+	*/
+	var novoResult;
+
+	/**
+	* Armazena o valor extraído do resultado filtrado.
+	* @type {*|null}
+	*/
+	var novoValor;
+
+	/**
+	* Nome do atributo que receberá o novo valor.
+	* @type {string}
+	*/
+	var nome;
+
+	/**
+	* Função principal de replay. Inscreve-se em logs históricos baseados em um componente.
+	* 
+	* @param {Function} f - Função callback a ser executada após o valor ser atualizado.
+	* @param {Object} comp - Componente ao qual o valor histórico será atribuído.
+	*/
+	function replay(f, comp) {
+		if (typeof(client) !== "undefined") {
+			// Filtra o nó de tendência baseado no componente e no ID "Trend"
+			var trendNode = nodeFilter(comp, "Id", "Trend");
+			trendNode = trendNode[0];
+
+			if (trendNode != null) {
+				// Resolve o bind completo do nó de tendência
+				var resolvedBind = resolveBind(trendNode.getFullBindName());
+				resolvedBind = resolvedBind.split("/");
+				resolvedBind.pop();
+				resolvedBind = resolvedBind.join("/");
+			}
+		}
+	}
+	
+	
+    /**
+     * Retorna uma função que processa o resultado do log e atualiza o componente com o valor extraído.
+     * 
+     * @param {Function} f - Função callback a ser executada após o valor ser atualizado.
+     * @param {Object} component - Componente ao qual o valor histórico será atribuído.
+     * @param {string} nome - Nome do atributo a ser atualizado no componente.
+     * @returns {Function} Função que processa o resultado do log.
+     */
+    function curriedMostraValor(f, component, nome) {
+        return function(result, unit, subId) {
+            // Data atual do documento
+            var valueTime = new Date(document.getDocumentElement().getAttribute("valueTime"));
+            
+            // Filtra os resultados anteriores à data atual
+            novoResult = result.filter((arg) => valueTime > arg.timestamp);
+            novoResult = novoResult[0];
+            
+            // Define o novo valor ou null se não houver resultado
+            novoValor = null;
+            if (novoResult !== undefined) {
+                novoValor = novoResult.value;
+            }
+
+            // Define o valor filtrado como atributo do componente
+            component.setAttribute(nome, novoValor);
+            
+            // Executa a função callback passada
+            f();
+
+            // O valor extraído é atribuído como um atributo do componente.
+            // A variável global "inPast" indica se foi ativado o replay da tela.
+        }
+    }
+
    
 }
