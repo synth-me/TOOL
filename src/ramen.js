@@ -35,8 +35,7 @@ function onLoad(evt){
      * @param {string} attrName - O nome do atributo pelo qual os nós filhos serão filtrados.
      * @param {string} attrValue - O valor do atributo que o nó filho deve ter para ser incluído no resultado.
      * @param {string} searchType - Tipo de pesquisa (não utilizado na implementação atual).
-     * @returns {Array|Object|null} - Retorna um array de nós filhos que correspondem ao critério de pesquisa, 
-     * se mais de um nó for encontrado. Se apenas um nó corresponder, retorna esse nó. Se nenhum nó corresponder, retorna `null`.
+     * @returns {Array|Object|null} - Retorna um array de nós filhos que correspondem ao critério de pesquisa
      */
     nodeFilter = function(cComp, attrName, attrValue, searchType){
         const children = Array.from(cComp.getChildNodes());
