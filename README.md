@@ -9,7 +9,10 @@ current version: `homemade`
 All the features included in this library are made to simplify the process of interface design in EBO. 
 I spotted that most of our programmers spent valuable time in repetitive tasks like copying and pasting code 
 or even allocating memory for variables that should not exist solely because TGML Script did not have
-the ergononimcs to avoid it. This libary was designed to solve this kind of problems. 
+the ergononimcs to avoid it. This library was designed to solve this kind of problems. 
+
+Also it contains nice controllers designed to be integrrated with different components that are already in use
+and future ones: replay features, trend access and direct interface binding.
 
 ## Main Features:
 
